@@ -15,15 +15,17 @@ const NewsListBlock = styled.div`
   }
 `;
 
-const NewsList = () => {
+const NewsList = ({category}) => {
   const [articles, setArticles] = useState(null);
   const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('https://newsapi.org/v2/top-headlines?country=kr&apiKey=dc4cab2824d34934ac96625d61bcafd5');
+        const query = category === 'all' ? '': `&category=${category}`;
+        const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=kr${query}&apiKey=dc4cab2824d34934ac96625d61bcafd5`);
         setArticles(response.data.articles);
       } catch (e) {
         console.log(e);
@@ -31,7 +33,7 @@ const NewsList = () => {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [category]);
 
   if (loading) {
     return <NewsListBlock>Loading..</NewsListBlock>;
